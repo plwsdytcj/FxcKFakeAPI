@@ -1,0 +1,4 @@
+interface:
+  display_name: "API Relay Audit"
+  short_description: "Audit API relay authenticity and quality"
+  default_prompt: "Use $api-relay-audit to investigate whether this AI API relay is genuine, stable, and worth trusting."
