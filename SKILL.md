@@ -12,8 +12,10 @@ Determine whether a relay endpoint is worth trusting. Prefer observable evidence
 Use these bundled resources:
 
 - `tools/probe_relay.py`
+- `tools/render_report.py`
 - `docs/audit-rubric.md`
 - `docs/public-signals.md`
+- `docs/troubleshooting.md`
 - `prompts/report-template.md`
 
 When running inside Claude Code, the skill directory is usually available through `${CLAUDE_SKILL_DIR}`. In other agents, resolve paths relative to the skill directory.
@@ -95,6 +97,7 @@ Probe goals:
 
 Do not send production secrets or proprietary code to an untrusted relay just to test it.
 Do not run deep probes blindly on expensive production keys; they generate extra traffic and the cache probe sends a long prompt.
+If probes fail or auth behavior is confusing, check `docs/troubleshooting.md` before drawing conclusions.
 
 ### 4. Interpret the evidence
 
@@ -137,7 +140,35 @@ Use exact dates in the conclusion, especially when discussing outages, policy ch
 
 ### 6. Report the result
 
-Use `prompts/report-template.md` as the reporting skeleton.
+Use `prompts/report-template.md` as the reporting skeleton. `tools/render_report.py` can turn probe JSON plus collected claims into a ready-to-send Markdown report.
+
+Example with live probe output:
+
+```bash
+python3 tools/render_report.py \
+  --probe-json relay-audit.json \
+  --claimed-provider Claude \
+  --claimed-upstream "official direct API" \
+  --claimed-feature streaming \
+  --claimed-feature "Claude Code" \
+  --claimed-pricing "$3 / 1M tokens input" \
+  --docs-url https://example.com/docs \
+  --pricing-url https://example.com/pricing \
+  --status-url https://example.com/status \
+  --output relay-audit-report.md
+```
+
+Example without a key:
+
+```bash
+python3 tools/render_report.py \
+  --claimed-provider Claude \
+  --claim "官方直连" \
+  --claim "Claude Code" \
+  --docs-url https://example.com/docs \
+  --pricing-url https://example.com/pricing \
+  --output relay-audit-docs-only.md
+```
 
 Minimum output fields:
 

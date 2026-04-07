@@ -80,3 +80,30 @@ python3 tools/probe_relay.py \
   --burst-count 3 \
   --output relay-audit-deep.json
 ```
+
+Render a Markdown report from the JSON artifact:
+
+```bash
+python3 tools/render_report.py \
+  --probe-json relay-audit-deep.json \
+  --claimed-provider Claude \
+  --claimed-upstream "official direct API" \
+  --claimed-feature streaming \
+  --claimed-feature "Claude Code" \
+  --docs-url https://example.com/docs \
+  --pricing-url https://example.com/pricing \
+  --output relay-audit-report.md
+```
+
+If no key is available, render a docs-only report:
+
+```bash
+python3 tools/render_report.py \
+  --claimed-provider Claude \
+  --claim "official direct" \
+  --docs-url https://example.com/docs \
+  --pricing-url https://example.com/pricing \
+  --output relay-audit-docs-only.md
+```
+
+If probe requests fail, check `docs/troubleshooting.md`.

@@ -1,6 +1,12 @@
 # API Relay Audit Skill
 
-## 中文
+**Language:** [简体中文](#readme-zh) | [English](#readme-en)
+
+<a id="readme-zh"></a>
+
+## 简体中文
+
+[Switch to English](#readme-en)
 
 面向 `Claude Code`、`Codex` 和兼容 `SKILL.md` 的 agent 的 API 中转站审计 Skill。
 
@@ -14,8 +20,10 @@
 FxckFakeAPI/
   SKILL.md
   tools/probe_relay.py
+  tools/render_report.py
   docs/audit-rubric.md
   docs/public-signals.md
+  docs/troubleshooting.md
   prompts/report-template.md
   agents/openai.yaml
 ```
@@ -120,12 +128,42 @@ python3 tools/probe_relay.py \
   --output relay-audit-deep.json
 ```
 
+将 JSON 探测结果转成 Markdown 审计报告：
+
+```bash
+python3 tools/render_report.py \
+  --probe-json relay-audit-deep.json \
+  --claimed-provider Claude \
+  --claimed-upstream "official direct API" \
+  --claimed-feature streaming \
+  --claimed-feature "Claude Code" \
+  --claimed-pricing "$3 / 1M tokens input" \
+  --docs-url https://example.com/docs \
+  --pricing-url https://example.com/pricing \
+  --status-url https://example.com/status \
+  --output relay-audit-report.md
+```
+
+如果没有 key，也可以只做文档审计：
+
+```bash
+python3 tools/render_report.py \
+  --claimed-provider Claude \
+  --claim "官方直连" \
+  --claim "Claude Code" \
+  --docs-url https://example.com/docs \
+  --pricing-url https://example.com/pricing \
+  --output relay-audit-docs-only.md
+```
+
 ### 核心文件
 
 - `SKILL.md`: 审计流程主说明
 - `tools/probe_relay.py`: HTTP 探测脚本
+- `tools/render_report.py`: Markdown 报告生成脚本
 - `docs/audit-rubric.md`: 评分规则
 - `docs/public-signals.md`: 常见营销话术和红旗
+- `docs/troubleshooting.md`: 常见探测失败与排障说明
 - `prompts/report-template.md`: 报告输出模板
 
 ### 设计原则
@@ -137,7 +175,11 @@ python3 tools/probe_relay.py \
 
 ---
 
+<a id="readme-en"></a>
+
 ## English
+
+[切换到中文](#readme-zh)
 
 An API relay auditing skill for `Claude Code`, `Codex`, and other agents that support `SKILL.md`.
 
@@ -151,8 +193,10 @@ This repository is itself a skill directory:
 FxckFakeAPI/
   SKILL.md
   tools/probe_relay.py
+  tools/render_report.py
   docs/audit-rubric.md
   docs/public-signals.md
+  docs/troubleshooting.md
   prompts/report-template.md
   agents/openai.yaml
 ```
@@ -257,12 +301,42 @@ python3 tools/probe_relay.py \
   --output relay-audit-deep.json
 ```
 
+Render the probe JSON into a Markdown report:
+
+```bash
+python3 tools/render_report.py \
+  --probe-json relay-audit-deep.json \
+  --claimed-provider Claude \
+  --claimed-upstream "official direct API" \
+  --claimed-feature streaming \
+  --claimed-feature "Claude Code" \
+  --claimed-pricing "$3 / 1M tokens input" \
+  --docs-url https://example.com/docs \
+  --pricing-url https://example.com/pricing \
+  --status-url https://example.com/status \
+  --output relay-audit-report.md
+```
+
+Docs-only report example:
+
+```bash
+python3 tools/render_report.py \
+  --claimed-provider Claude \
+  --claim "official direct" \
+  --claim "Claude Code" \
+  --docs-url https://example.com/docs \
+  --pricing-url https://example.com/pricing \
+  --output relay-audit-docs-only.md
+```
+
 ### Key Files
 
 - `SKILL.md`: main audit workflow
 - `tools/probe_relay.py`: HTTP probe runner
+- `tools/render_report.py`: Markdown report renderer
 - `docs/audit-rubric.md`: scoring rubric
 - `docs/public-signals.md`: common red flags and claim patterns
+- `docs/troubleshooting.md`: common failure modes and recovery steps
 - `prompts/report-template.md`: report template
 
 ### Design Principles
